@@ -7,22 +7,27 @@ namespace vnc
     [RequireComponent(typeof(CharacterController))]
     public class FirstPerson : MonoBehaviour
     {
+        public static FirstPerson singleton;
 
-        #region Private Fields
+        #region References
         CharacterController p_character;
         Camera p_Camera;
+        #endregion
 
+        #region Settings
+        public float Speed;
+        public bool InteractiveMode { get { return _interactiveMode; } set { _interactiveMode = value; } }
+
+        bool _interactiveMode = false;
         bool lockedCursor = true;
         #endregion
 
-        #region Public Fields
-        public float Speed;
-        #endregion
-
+        #region Unity Methods
         void Start()
         {
             p_character = GetComponent<CharacterController>();
             p_Camera = Camera.main;
+            singleton = this;
         }
 
         void Update()
@@ -30,15 +35,22 @@ namespace vnc
             float mouseX = Input.GetAxis("Mouse X");
             float mouseY = Input.GetAxis("Mouse Y");
 
-            Look(mouseX, mouseY);
-            CursorLock();
+            if(!InteractiveMode)
+                CursorLock();
 
-            var walk = Input.GetAxis("Vertical") * p_character.transform.TransformDirection(Vector3.forward);
-            var strafe = Input.GetAxis("Horizontal") * p_character.transform.TransformDirection(Vector3.right);
+            if (lockedCursor)
+            {
+                Look(mouseX, mouseY);
 
-            p_character.SimpleMove((walk + strafe) * Speed);
+                var walk = Input.GetAxis("Vertical") * p_character.transform.TransformDirection(Vector3.forward);
+                var strafe = Input.GetAxis("Horizontal") * p_character.transform.TransformDirection(Vector3.right);
+
+                p_character.SimpleMove((walk + strafe) * Speed);
+            }
         }
+        #endregion
 
+        #region Private Methods
         void Look(float mouseX, float mouseY)
         {
             p_character.transform.rotation *= Quaternion.Euler(0f, mouseX, 0f);
@@ -48,15 +60,13 @@ namespace vnc
 
         void CursorLock()
         {
+#if UNITY_EDITOR
             // Unlock cursor from game windwo
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                lockedCursor = false;
+                lockedCursor = !lockedCursor;
             }
-            else if (Input.GetMouseButtonUp(0))
-            {
-                lockedCursor = true;
-            }
+#endif
 
             if (lockedCursor)
             {
@@ -85,6 +95,25 @@ namespace vnc
 
             return q;
         }
+        #endregion
+
+        #region Static Methods
+        public static void OnSetInteractiveMode()
+        {
+            singleton.InteractiveMode = true;
+            singleton.lockedCursor = false;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+
+        public static void OnExitInteractiveMode()
+        {
+            singleton.InteractiveMode = false;
+            singleton.lockedCursor = true;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+#endregion
     }
 
 }
