@@ -12,7 +12,7 @@ namespace vnc
             gameObject.SetActive(false);
         }
 
-        public void ShowPanel()
+        public virtual void ShowPanel()
         {
             if (isMainPanel)
                 FirstPerson.OnSetInteractiveMode();

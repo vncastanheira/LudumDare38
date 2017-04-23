@@ -283,7 +283,7 @@ namespace vnc
         public void Action_ReadGoodMessage()
         {
             SelfEsteem++;
-            PlayerCanvas.AddLogEntry("Self Esteem decreased...", LogType.Moderate);
+            PlayerCanvas.AddLogEntry("Self Esteem increased...", LogType.Good);
 
             DebugLogStatus();
         }
