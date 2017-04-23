@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 using vnc;
 
@@ -10,8 +8,20 @@ public class Interactive : MonoBehaviour {
     public InteractivePanel Panel;
     public UnityEvent OnInteraction;
 
-    public void Interact()
+    [Tooltip("You cannot ineract with energy demanding tasks")]
+    public bool RequireSleep;
+
+    public virtual void Interact()
     {
+        if (RequireSleep)
+        {
+            if(GameManager.singleton.Energy <= 0)
+            {
+                PlayerCanvas.AddLogEntry("Too tired...");
+                return;
+            }
+        }
+
         if (Panel != null)
         {
             Panel.ShowPanel();

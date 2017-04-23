@@ -1,28 +1,44 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-[RequireComponent(typeof(Light))]
-public class Lamp : MonoBehaviour {
-
-    Light _light;
-    float intensity;
-    bool isOn;
-
-    void Start () {
-        _light = GetComponent<Light>();
-        intensity = _light.intensity;
-
-        isOn = false;
-        _light.intensity = 0;
-    }
-	
-    public void ToggleSwitch()
+namespace vnc
+{
+    [RequireComponent(typeof(Light))]
+    public class Lamp : MonoBehaviour
     {
-        isOn = !isOn;
-        if (isOn)
-            _light.intensity = intensity;
-        else
+
+        Light _light;
+        float intensity;
+        bool isOn;
+
+        public bool IsOn
+        {
+            get { return isOn; }
+            private set { isOn = value; }
+        }
+
+
+        void Start()
+        {
+            _light = GetComponent<Light>();
+            intensity = _light.intensity;
+
+            IsOn = false;
             _light.intensity = 0;
+        }
+
+        public void ToggleSwitch()
+        {
+            IsOn = !IsOn;
+            if (IsOn)
+            {
+                _light.intensity = intensity;
+                GameManager.singleton.lampsOn++;
+            }
+            else
+            {
+                _light.intensity = 0;
+                GameManager.singleton.lampsOn--;
+            }
+        }
     }
 }

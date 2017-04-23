@@ -19,7 +19,9 @@ namespace vnc
         public bool InteractiveMode { get { return _interactiveMode; } set { _interactiveMode = value; } }
 
         bool _interactiveMode = false;
-        bool lockedCursor = true;
+        public bool lockedCursor = true;
+
+        bool cinematicMode = false;
         #endregion
 
         #region Unity Methods
@@ -32,6 +34,9 @@ namespace vnc
 
         void Update()
         {
+            if (cinematicMode)
+                return;
+
             float mouseX = Input.GetAxis("Mouse X");
             float mouseY = Input.GetAxis("Mouse Y");
 
@@ -60,14 +65,6 @@ namespace vnc
 
         void CursorLock()
         {
-#if UNITY_EDITOR
-            // Unlock cursor from game windwo
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                lockedCursor = !lockedCursor;
-            }
-#endif
-
             if (lockedCursor)
             {
                 Cursor.lockState = CursorLockMode.Locked;
@@ -112,6 +109,34 @@ namespace vnc
             singleton.lockedCursor = true;
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+        }
+
+        public static void EnterCinematic()
+        {
+            singleton.cinematicMode = true;
+        }
+
+        public static void EnterCinematic(Vector3 target)
+        {
+            var rotation = Quaternion.LookRotation(target - singleton.transform.position);
+            singleton.StartCoroutine(SlowRotate(rotation));
+
+            EnterCinematic();
+        }
+
+        static IEnumerator SlowRotate(Quaternion rotation)
+        {
+            for (int i = 0; i < 300; i++)
+            {
+                singleton.transform.rotation = Quaternion.Slerp(singleton.transform.rotation, rotation, Time.deltaTime);
+                yield return null;
+            }
+
+        }
+
+        public static void ExitCinematic()
+        {
+            singleton.cinematicMode = false;
         }
 #endregion
     }

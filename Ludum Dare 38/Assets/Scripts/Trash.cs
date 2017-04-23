@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace vnc
 {
@@ -11,7 +12,7 @@ namespace vnc
     public class Trash : MonoBehaviour
     {
         UnityEngine.UI.Button btn;
-        public GameAction action;
+        public UnityEvent OnDelete;
 
         void Start()
         {
@@ -21,7 +22,7 @@ namespace vnc
 
         void Delete()
         {
-            GameManager.singleton.Action_DeleteMessage(action);
+            OnDelete.Invoke();
             Destroy(transform.parent.gameObject);
         }
     }
