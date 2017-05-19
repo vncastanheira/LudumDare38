@@ -32,12 +32,12 @@ namespace vnc
             if (IsOn)
             {
                 _light.intensity = intensity;
-                GameManager.singleton.lampsOn++;
+                GameManager.Singleton.lampsOn++;
             }
             else
             {
                 _light.intensity = 0;
-                GameManager.singleton.lampsOn--;
+                GameManager.Singleton.lampsOn--;
             }
         }
     }

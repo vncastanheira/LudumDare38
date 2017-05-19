@@ -33,7 +33,7 @@ namespace vnc
         {
             Panel.gameObject.SetActive(!Panel.gameObject.activeInHierarchy);
             FirstPerson.singleton.lockedCursor = !FirstPerson.singleton.lockedCursor;
-            GameManager.singleton.isPaused = !GameManager.singleton.isPaused;
+            GameManager.Singleton.isPaused = !GameManager.Singleton.isPaused;
         }
 
         public void ExitGame()
@@ -47,7 +47,7 @@ namespace vnc
         {
             if (Input.GetKeyDown(KeyCode.F1))
             {
-                GameManager.singleton.SelfEsteem = 5;
+                GameManager.Singleton.SelfEsteem = 5;
             }
         }
     #endif

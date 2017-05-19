@@ -17,7 +17,7 @@ namespace vnc
 
         public override void Interact()
         {
-            if(GameManager.singleton.SelfEsteem < 4)
+            if(GameManager.Singleton.SelfEsteem < 4)
             {
                 base.Interact();
             }

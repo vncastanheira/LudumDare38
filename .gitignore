@@ -1,5 +1,5 @@
-/Ludum Dare 38/[Library/
-/Ludum Dare 38/[Temp/
+/Ludum Dare 38/Library/
+/Ludum Dare 38/Temp/
 /Ludum Dare 38/[Oo]bj/
 /Ludum Dare 38/[Bb]uild/
 /Ludum Dare 38/[Bb]uilds/
@@ -28,3 +28,4 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+/Ludum Dare 38/Assets/Plugins

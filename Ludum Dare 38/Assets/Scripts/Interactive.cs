@@ -15,7 +15,7 @@ public class Interactive : MonoBehaviour {
     {
         if (RequireSleep)
         {
-            if(GameManager.singleton.Energy <= 0)
+            if(GameManager.Singleton.Energy <= 0)
             {
                 PlayerCanvas.AddLogEntry("Too tired...");
                 return;

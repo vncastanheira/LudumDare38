@@ -4,13 +4,17 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using vnc.Utilities;
 using UnityEffects = UnityStandardAssets.ImageEffects;
 
 namespace vnc
 {
-    public class GameManager : MonoBehaviour
+    public class GameManager : SingletonMonoBehaviour<GameManager>
     {
-        public static GameManager singleton;
+        public override void CreateSingleton()
+        {
+            Singleton = this;
+        }
 
         [Header("References")]
         public Light Sun;
@@ -112,9 +116,14 @@ namespace vnc
         #endregion
 
         #region Unity Methods
+        private void Awake()
+        {
+            CreateSingleton();
+        }
+
         public void Start()
         {
-            singleton = this;
+            Singleton = this;
 
             gray = Camera.main.GetComponent<UnityEffects.Grayscale>();
 
