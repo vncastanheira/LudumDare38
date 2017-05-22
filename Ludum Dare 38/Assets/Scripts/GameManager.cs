@@ -24,6 +24,7 @@ namespace vnc
         public int lampsOn = 0;
         public RectTransform GameOverScreen;
 
+        const int MINIMUM_ANXIETY = 2;
         public Texture AnsietyRamp;
         UnityEffects.Grayscale gray;
 
@@ -65,6 +66,9 @@ namespace vnc
         #region Audio
         [Header("Audios")]
         public AudioSource HighAnxiety;
+        public AudioSource Rooster;
+        public AudioSource Birds;
+        bool roosterCanSing = true;
         #endregion
 
         #region Status Properties
@@ -127,13 +131,14 @@ namespace vnc
 
             gray = Camera.main.GetComponent<UnityEffects.Grayscale>();
 
-            DayTime = new DateTime(2017, 4, 22, 8, 0, 0);
+            DayTime = new DateTime(2017, 4, 22, 6, 0, 0);
             startDay = DayTime;
             dayCycle = DayCycle.Day;
             OnCycleChanged = new UnityEvent();
             OnCycleChanged.AddListener(FearOfTheDarkEvent);
 
             Energy = 3;
+            Birds.PlayDelayed(2);
         }
 
         void Update()
@@ -152,6 +157,9 @@ namespace vnc
 
         void FixedUpdate()
         {
+            if (isPaused)
+                return;
+
             FearOfTheDark();
 
             var healthHit = (5 - SelfEsteem) + (5 - Energy);
@@ -199,9 +207,9 @@ namespace vnc
 
         int CalculateAnxiety()
         {
-            if (Anxiety >= 0 && Anxiety < 2)
+            if (Anxiety >= 0 && Anxiety < MINIMUM_ANXIETY)
                 return 1;
-            else if (Anxiety > 2 && Anxiety < 5)
+            else if (Anxiety > MINIMUM_ANXIETY && Anxiety < 5)
                 return Anxiety;
             else
                 return 10;
@@ -266,12 +274,12 @@ namespace vnc
         // camera effects correspond to your status
         void CameraEffects()
         {
-            if (Energy == 0 || Anxiety >= 4)
+            if (Energy == 0 || Anxiety >= MINIMUM_ANXIETY)
                 gray.enabled = true;
             else
                 gray.enabled = false;
 
-            if (Anxiety >= 4)
+            if (Anxiety >= MINIMUM_ANXIETY)
                 gray.textureRamp = AnsietyRamp;
             else
                 gray.textureRamp = null;
@@ -280,10 +288,19 @@ namespace vnc
 
         void Music()
         {
-            if (Anxiety >= 4 && !HighAnxiety.isPlaying)
+            if (Anxiety >= 2 && !HighAnxiety.isPlaying)
                 HighAnxiety.Play();
-            else if (Anxiety < 4 && HighAnxiety.isPlaying)
+            else if (Anxiety < 2 && HighAnxiety.isPlaying)
                 HighAnxiety.Stop();
+
+            if (DayTime.Hour > 12 && DayTime.Hour < 24)
+                roosterCanSing = true;
+            if(DayTime.Hour >= 6 && DayTime.Hour < 8 && roosterCanSing)
+            {
+                Rooster.Play();
+                roosterCanSing = false;
+            }
+
         }
         #endregion
 

@@ -8,7 +8,7 @@ namespace vnc
 
         public Transform Target;
 
-	    public void CinematicEnding()
+        public void CinematicEnding()
         {
             StartCoroutine(CinematicEndCoroutine());
         }

@@ -7,23 +7,14 @@ namespace vnc
     {
 
         Light _light;
-        float intensity;
-        bool isOn;
-
-        public bool IsOn
-        {
-            get { return isOn; }
-            private set { isOn = value; }
-        }
-
-
+        public float Intensity;
+        public bool IsOn;
+        
         void Start()
         {
             _light = GetComponent<Light>();
-            intensity = _light.intensity;
-
-            IsOn = false;
-            _light.intensity = 0;
+            if(IsOn)
+                GameManager.Singleton.lampsOn++;
         }
 
         public void ToggleSwitch()
@@ -31,7 +22,7 @@ namespace vnc
             IsOn = !IsOn;
             if (IsOn)
             {
-                _light.intensity = intensity;
+                _light.intensity = Intensity;
                 GameManager.Singleton.lampsOn++;
             }
             else
